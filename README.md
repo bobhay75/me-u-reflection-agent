@@ -2,6 +2,17 @@
 
 Me + U = 3: me, you, and the relationship we create between us.
 
+## Choose the intended project
+
+| Directory | Product and runtime | Public deployment |
+| --- | --- | --- |
+| [`public-worksheet/`](public-worksheet/) | Local-only five-lens worksheet; no story upload, provider, account or story storage | [Live public beta](https://me-u-reflection-agent.thebobsomest1.chatgpt.site/) |
+| Repository root | Separate Node prototype with optional Gemini processing | No live cloud configuration is asserted |
+
+The worksheet source was added here November 23 with original Sites commit/file provenance and its own build/browser checks. The projects have different privacy and runtime contracts. See [`contest/`](contest/) for the development disclosure, repeatable checks and actual demo instructions. Run commands inside the selected directory.
+
+## Root prototype
+
 This is a runnable web reflection prototype with five lenses: ME, U, US, WITNESS, and WHAT NEXT. The default guided prompts run entirely in the browser. They are general questions, not a personalized analysis or verification of the user's account. Nothing in the default flow is saved or sent to a model.
 
 ## Run a clean checkout
