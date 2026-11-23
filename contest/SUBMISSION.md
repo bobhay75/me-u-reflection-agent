@@ -12,7 +12,7 @@ A blank notes app can hold the same words. Me+U adds a visible five-part structu
 
 This improves an existing project. The five-lens local-only worksheet, its design, information pages and fictional example existed before the event. The prior Sites source commit was `5c38684` from September 8, 2026.
 
-November 23 contributions include repairing the production framework/Worker dependencies; preventing the example from silently replacing entered work; adding an explicit cancel path; making the refresh-clearing boundary visible before use; testing production routes/security through the real Worker; and adding public source provenance, browser/privacy/accessibility regression coverage and an actual demonstration. The deployed repair is Sites version 3, source commit `511e418cbdc77e42eedcf45099b822226fd5f069`. Its snapshot and subsequent test/demo additions are in `public-worksheet/`.
+November 23 contributions include repairing the production framework/Worker dependencies; preventing the example from silently replacing entered work; adding an explicit cancel path; making the refresh-clearing boundary visible before use; testing production routes/security through the real Worker; fixing the small lens-number labels after a real browser check found insufficient contrast; and adding public source provenance, browser/privacy/accessibility regression coverage and an actual demonstration. The deployed repair is Sites version 4, source commit `b44ac346cea96898d34fa78318dc1224aa208db1`. Its application source and additional test/demo tooling are in `public-worksheet/`.
 
 The root retains an earlier, separate optional-cloud prototype. Its Gemini endpoint is not part of this candidate or the public beta.
 

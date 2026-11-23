@@ -49,7 +49,7 @@ Do not add a remote reflection endpoint or paid checkout without an explicit pri
 
 ## Source lineage and release repair
 
-This directory reproduces the public **local-only worksheet** at Sites version 3. `SOURCE-PROVENANCE.json` identifies the original source commit and file digests. The repository root preserves a separate optional-cloud prototype. Its Gemini endpoint and privacy text are not the contract of this worksheet.
+This directory reproduces the public **local-only worksheet** at Sites version 4. `SOURCE-PROVENANCE.json` identifies the original version 3 capture and the version 4 application-file digests. Version 4 corrects the small lens-number labels after a real browser check found insufficient contrast. The repository root preserves a separate optional-cloud prototype. Its Gemini endpoint and privacy text are not the contract of this worksheet.
 
 The November 2026 repair preserves the Site identity, public audience, worker entry and no-upload behavior. It updates the framework/Worker toolchain, prevents the fictional example from silently overwriting entered text, offers an explicit way to cancel replacement, and makes the lack of refresh/navigation persistence visible before use. There is no new provider, storage, tracking, payment or message endpoint.
 

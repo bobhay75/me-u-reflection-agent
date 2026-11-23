@@ -1,6 +1,6 @@
 # Reproducible worksheet evidence
 
-The public beta corresponds to Sites version 3, source commit `511e418cbdc77e42eedcf45099b822226fd5f069`. `public-worksheet/SOURCE-PROVENANCE.json` records original file digests. Application content is preserved; subsequent changes add source distribution, documentation, browser tests and demo tooling. Root-level commands exercise a different prototype.
+The public beta corresponds to Sites version 4, source commit `b44ac346cea96898d34fa78318dc1224aa208db1`. `public-worksheet/SOURCE-PROVENANCE.json` preserves the original version 3 capture and records the version 4 application-file digests. The one application change after that capture brightens the small lens-number labels, correcting the 4.14:1 contrast failure found by the real browser accessibility check. Source distribution, documentation, browser tests and demo tooling are additional repository changes. Root-level commands exercise a different prototype.
 
 ## Build and production routes
 

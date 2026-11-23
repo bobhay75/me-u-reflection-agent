@@ -1,7 +1,5 @@
 {
-  "schema": 1,
-  "site_version": 3,
-  "source_commit": "511e418cbdc77e42eedcf45099b822226fd5f069",
+  "schema": 2,
   "live_url": "https://me-u-reflection-agent.thebobsomest1.chatgpt.site/",
   "captured_on": "2026-11-23",
   "original_file_sha256": {
@@ -38,5 +36,34 @@
     "tsconfig.json": "379054f6cec60ebd0e18c47a3ce72b2cc1b3f7abd0037c668e87cb2070891147",
     "vite.config.ts": "f7c14b8a38546bb6a7ec93cba22f8e8f131da9fbfe8b39327422ed5bb98d4613",
     "worker/index.ts": "36bd5789ddc3c8912acc5053f7c5e0911f8a2c2fba9b320702533c399e1b92eb"
-  }
+  },
+  "original_site_version": 3,
+  "original_source_commit": "511e418cbdc77e42eedcf45099b822226fd5f069",
+  "site_version": 4,
+  "source_commit": "b44ac346cea96898d34fa78318dc1224aa208db1",
+  "application_file_sha256": {
+    "app/about/page.tsx": "0820edeef9bfe6bf02ce8f8b2fa7db6ce00b300eaf3c0512373676d5d3d18655",
+    "app/globals.css": "2304d20d4a8609a1befc9f94b48966273993ecdcb3fcb5758066f9b6ecf02cbc",
+    "app/layout.tsx": "2c790a9aa7458ae283d13d748cc661ed779c591f7b6124e991664321dff2241a",
+    "app/manifest.ts": "03a4de769aab7078711f3c67902723ae77b81c9779db41ab11a98342b7c02a91",
+    "app/page.tsx": "310429d146e95f87c5c4fbdb972063f8e130a8f38ffca1a7a24b9581323f1280",
+    "app/privacy/page.tsx": "e49e689e2b410e471c3bb232c1581b627583746ae20ed5f8bb2aa1df16a4faf1",
+    "app/robots.ts": "779a39bd9bb36da9eee84f4695206bf5a0fef347e938cd2d696fdad5eaa5f3a1",
+    "app/safety/page.tsx": "b160c367fdce7caa45ad7ba655948f66594116e44c9ecc73f75cf7aa177fb697",
+    "app/sitemap.ts": "ebf509064269420a2d1f6145f84575d5b2ee658dcbf0309b05fcc1b56c45018c",
+    "app/terms/page.tsx": "cad114cfe76f055b241001df961b7bb72dd3f038eea3700b01e3da05a8885e46",
+    "components/InfoPage.tsx": "10a131373160d5a006aa212c54be22eac4c9b6cd1874b0e66d7fd024889aea3d",
+    "components/ReflectionWorkspace.tsx": "3b077b352b3d6cf57b3e2a1f05913d70d404bbe0206138949536eaa5ff433276",
+    "lib/reflection.d.mts": "73be15780b3767619697f7a5e74072bb99894ef6a535762c2c837f3a0ddc8d89",
+    "lib/reflection.mjs": "543d08803d7287895b7bf2e478579182a9669581d23e7d41ec30061dcf403ff7",
+    "public/favicon.svg": "e6d2e59b7b5bbb0342e0fb496dfc262decbfe4426bbb7b047aec8d467d1dc6f7",
+    "public/og.png": "bb32d8e546935810b76276b6c451520d1bf556131a9c66aee93a1ba300ec6267",
+    "worker/index.ts": "36bd5789ddc3c8912acc5053f7c5e0911f8a2c2fba9b320702533c399e1b92eb"
+  },
+  "application_changes_since_original_capture": [
+    {
+      "path": "app/globals.css",
+      "change": "Brighten the small lens-number label to #ff9a8c after browser axe found 4.14:1 contrast; corrected color pair computes to 6.71:1."
+    }
+  ]
 }

@@ -88,7 +88,7 @@ textarea::placeholder { color: #aebbb4; opacity: 1; }
 .tabs button { min-width: 58px; min-height: 44px; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.32); border-radius: 999px; background: transparent; color: #dbe3df; font-weight: 850; font-size: 13px; white-space: nowrap; cursor: pointer; }
 .tabs button[aria-selected="true"] { background: var(--lime); color: var(--ink); border-color: var(--lime); }
 .lens-heading { display: grid; grid-template-columns: auto 1fr; gap: 18px; margin: 10px 0 26px; }
-.lens-heading > span { color: var(--coral); font: 900 13px var(--display); }
+.lens-heading > span { color: #ff9a8c; font: 900 13px var(--display); }
 .lens-heading h3, .summary-card h3 { margin: 0; font: 900 clamp(30px, 4vw, 48px)/1 var(--display); letter-spacing: -0.04em; }
 .lens-heading p { max-width: 720px; color: #d3dcd7; }
 .field-group { position: relative; margin-top: 20px; }
