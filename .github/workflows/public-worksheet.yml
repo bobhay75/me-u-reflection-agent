@@ -28,12 +28,13 @@ jobs:
         run: |
           sudo python3 - <<'PY'
           from pathlib import Path
-          for path in [Path('/etc/apt/sources.list'), *Path('/etc/apt/sources.list.d').glob('*.sources'), *Path('/etc/apt/sources.list.d').glob('*.list')]:
+          for path in [Path('/etc/apt/sources.list'), Path('/etc/apt/apt-mirrors.txt'), *Path('/etc/apt/sources.list.d').glob('*.sources'), *Path('/etc/apt/sources.list.d').glob('*.list')]:
               if path.exists():
                   data = path.read_text()
-                  # Preserve each configured host, suite, component and signature policy.
+                  # Include the hosted runner's mirror indirection file; preserve
+                  # configured hosts, suites, components and signature policy.
                   path.write_text(data.replace('http://', 'https://'))
-          Path('/etc/apt/apt.conf.d/80bounded-downloads').write_text('Acquire::http::Timeout "30";\nAcquire::https::Timeout "30";\nAcquire::Retries "2";\n')
+          Path('/etc/apt/apt.conf.d/80bounded-downloads').write_text('Acquire::http::Timeout "30";\nAcquire::https::Timeout "30";\nAcquire::Retries "2";\nAcquire::Languages "none";\nAPT::Update::Error-Mode "any";\n')
           PY
       - name: Install browser system libraries and video encoder
         timeout-minutes: 6
