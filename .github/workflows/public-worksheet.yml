@@ -1,0 +1,68 @@
+name: Verify public worksheet and record demo
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  worksheet:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: public-worksheet
+    env:
+      CLOUDFLARE_CF_FETCH_ENABLED: 'false'
+      WRANGLER_WRITE_LOGS: 'false'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: public-worksheet/package-lock.json
+      - run: npm ci --no-fund
+      - run: npm run release:check
+      - name: Bound official package downloads
+        run: |
+          sudo python3 - <<'PY'
+          from pathlib import Path
+          for path in [Path('/etc/apt/sources.list'), Path('/etc/apt/apt-mirrors.txt'), *Path('/etc/apt/sources.list.d').glob('*.sources'), *Path('/etc/apt/sources.list.d').glob('*.list')]:
+              if path.exists():
+                  data = path.read_text()
+                  # Preserve suites, components and signature policy.
+                  path.write_text(data.replace('http://', 'https://'))
+          # The regional EC2 mirror served indexes but repeatedly stalled on
+          # package bytes before falling back. Use the working signed archive
+          # directly on this ephemeral Ubuntu x86_64 runner.
+          mirror_list = Path('/etc/apt/apt-mirrors.txt')
+          if mirror_list.exists():
+              mirror_list.write_text('https://archive.ubuntu.com/ubuntu\n')
+          Path('/etc/apt/apt.conf.d/80bounded-downloads').write_text('Acquire::http::Timeout "30";\nAcquire::https::Timeout "30";\nAcquire::Retries "2";\nAcquire::Languages "none";\nAPT::Update::Error-Mode "any";\n')
+          PY
+      - name: Install browser system libraries and video encoder
+        timeout-minutes: 6
+        run: |
+          npx playwright install-deps chromium webkit
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            sudo apt-get install --yes --no-install-recommends ffmpeg
+          fi
+      - name: Download test browsers
+        timeout-minutes: 4
+        run: npx playwright install chromium webkit
+      - run: npm run browser:check
+      - name: Record the working application
+        run: npm run demo:record
+      - name: Build captioned MP4
+        run: python3 scripts/package-demo.py
+      - name: Retain actual results and footage
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: meu-public-worksheet-evidence
+          path: |
+            public-worksheet/test-results/
+            public-worksheet/demo-output/
+          retention-days: 30
+          if-no-files-found: error

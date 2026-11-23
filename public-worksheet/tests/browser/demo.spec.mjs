@@ -1,0 +1,63 @@
+import { test, expect } from '@playwright/test';
+import { writeFile } from 'node:fs/promises';
+import { startRelease } from './runtime.mjs';
+
+let release;
+test.beforeAll(async () => { release = await startRelease(); });
+test.afterAll(async () => { await release?.runtime.close(); });
+
+test('record a paced demonstration of the actual local-only worksheet', async ({ page, context }, info) => {
+  const captions = [], start = Date.now();
+  const show = async (text, seconds) => {
+    captions.push({ start: (Date.now() - start) / 1000, text });
+    // Deliberate viewing time for the exported demo, not synchronization for assertions.
+    await page.waitForTimeout(seconds * 1000);
+  };
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto(release.url);
+  await show('Me+U: a private five-lens worksheet for tense moments.\nActual application; fictional scenario throughout.', 9);
+  await page.getByRole('link', { name: 'Open the worksheet', exact: true }).click();
+  await show('Nothing you type is uploaded. No account or AI provider is connected.\nThis demo uses the same worksheet source as the live public beta.', 10);
+  await page.getByLabel('What happened, in your own words?', { exact: true }).fill('A colleague moved our meeting without telling me. I found the new time on the calendar and felt dismissed. I want to ask what happened before deciding why.');
+  await show('Start with observable details.\nLeave identifying or sensitive information out.', 9);
+  await page.getByRole('button', { name: 'Open five lenses', exact: true }).click();
+  await page.getByLabel('What do I notice in myself?', { exact: true }).fill('I feel frustrated and left out.');
+  await page.getByLabel('What is within my control?', { exact: true }).fill('I can pause and ask one calm question.');
+  await show('ME: notice feelings and what remains within your control.\nThe tool does not decide whether an interpretation is true.', 10);
+  await page.getByRole('tab', { name: 'ME', exact: true }).press('ArrowRight');
+  await page.getByLabel('What are two or more possible explanations?', { exact: true }).fill('They may have sent an update I missed, or a calendar setting may have changed. I do not know yet.');
+  await show('U: write possibilities without claiming to know someone’s motive.\nArrow keys move between the five accessible tabs.', 11);
+  await page.getByRole('tab', { name: 'US', exact: true }).click();
+  await page.getByLabel('What interaction loop might be forming?', { exact: true }).fill('An unexpected change leads me to assume exclusion, then respond sharply, which can make clarification harder.');
+  await show('US: consider a possible interaction loop.\nA pattern does not establish equal power or equal responsibility.', 10);
+  await page.getByRole('tab', { name: 'WITNESS', exact: true }).click();
+  await page.getByLabel('Directly observed', { exact: true }).fill('The calendar shows a new meeting time. I did not see an update message.');
+  await page.getByLabel('My inference', { exact: true }).fill('I assumed I was being deliberately excluded.');
+  await page.getByLabel('Still unknown', { exact: true }).fill('Who changed it, why, and whether a message was sent.');
+  await show('WITNESS: separate the record, the inference, and the unknown.\nEach sentence comes from the person using the worksheet.', 13);
+  await page.getByRole('tab', { name: 'WHAT NEXT?', exact: true }).click();
+  await page.getByLabel('What boundary or request is clear and within my control?', { exact: true }).fill('I need meeting changes to reach me through our agreed channel.');
+  await page.getByLabel('What is the smallest safe next step?', { exact: true }).fill('Ask: I noticed the time changed. Can you help me understand how the update was shared?');
+  await show('WHAT NEXT: choose a boundary and a small, safe action.\nThe worksheet never requires confrontation or reconciliation.', 12);
+  await page.getByRole('button', { name: 'Assemble my summary', exact: true }).click();
+  await expect(page.locator('pre')).toContainText('I assumed I was being deliberately excluded.');
+  await show('The summary contains only the entries shown here.\nIt does not add generated facts, diagnoses, or verified judgments.', 14);
+  await page.getByRole('button', { name: 'Copy to clipboard', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('Reflection copied');
+  await show('Copy the summary to keep it. Your device may retain clipboard text.\nThe app itself has no story database or local-storage journal.', 12);
+  await page.getByRole('button', { name: 'Clear this tab', exact: true }).click();
+  await page.getByRole('button', { name: 'Keep my worksheet', exact: true }).click();
+  await show('Clearing and example replacement both require confirmation.\nYou can cancel and keep your work.', 9);
+  await page.reload();
+  await expect(page.getByLabel('What happened, in your own words?', { exact: true })).toHaveValue('');
+  await show('Refreshing clears the worksheet. That is the stated privacy boundary.\nCopy first if you want to retain your own summary.', 9);
+  await page.goto(new URL('safety', release.url).href);
+  await show('Safety overrides symmetry. The app is not therapy or crisis care.\nThe safety page links to official human-support resources.', 10);
+  await page.goto(new URL('privacy', release.url).href);
+  await show('AI assisted development and testing; no AI runs on a person’s story here.\nSource, repeatable checks, and limitations are documented publicly.', 11);
+  await page.goto(release.url);
+  await show('November 23 work: dependency repair, safer replacement controls,\nsource reproducibility, browser/accessibility checks and this demo.', 10);
+  const end = (Date.now() - start) / 1000;
+  await writeFile(info.outputPath('captions.json'), JSON.stringify({ start, end, captions }, null, 2));
+  expect(end).toBeGreaterThan(120); expect(end).toBeLessThan(240);
+});
