@@ -7,7 +7,7 @@ import shutil
 import subprocess
 
 root = Path(__file__).resolve().parents[1]
-captions_files = list((root / "test-results").rglob("captions.json"))
+captions_files = list((root / "test-results" / "demo").rglob("captions.json"))
 if len(captions_files) != 1:
     raise SystemExit("Expected exactly one completed demo caption timeline")
 caption_file = captions_files[0]

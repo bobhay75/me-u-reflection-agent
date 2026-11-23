@@ -16,7 +16,7 @@
     "release:check": "npm run lint && npm run typecheck && npm run build && npm test && npm run audit:release && git diff --check",
     "audit:release": "npm audit --audit-level=high",
     "browser:check": "playwright test --project=desktop-chromium --project=android-chromium --project=iphone-webkit",
-    "demo:record": "playwright test --project=demo"
+    "demo:record": "playwright test --config=playwright.demo.config.mjs"
   },
   "dependencies": {
     "react": "19.3.1",
