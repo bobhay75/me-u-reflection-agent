@@ -24,7 +24,27 @@ jobs:
           cache-dependency-path: public-worksheet/package-lock.json
       - run: npm ci --no-fund
       - run: npm run release:check
-      - run: npx playwright install --with-deps chromium webkit
+      - name: Bound official package downloads
+        run: |
+          sudo python3 - <<'PY'
+          from pathlib import Path
+          for path in [Path('/etc/apt/sources.list'), *Path('/etc/apt/sources.list.d').glob('*.sources'), *Path('/etc/apt/sources.list.d').glob('*.list')]:
+              if path.exists():
+                  data = path.read_text()
+                  # Preserve each configured host, suite, component and signature policy.
+                  path.write_text(data.replace('http://', 'https://'))
+          Path('/etc/apt/apt.conf.d/80bounded-downloads').write_text('Acquire::http::Timeout "30";\nAcquire::https::Timeout "30";\nAcquire::Retries "2";\n')
+          PY
+      - name: Install browser system libraries and video encoder
+        timeout-minutes: 6
+        run: |
+          npx playwright install-deps chromium webkit
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            sudo apt-get install --yes --no-install-recommends ffmpeg
+          fi
+      - name: Download test browsers
+        timeout-minutes: 4
+        run: npx playwright install chromium webkit
       - run: npm run browser:check
       - name: Record the working application
         run: npm run demo:record

@@ -36,11 +36,33 @@ for index, caption in enumerate(captions):
     end = captions[index + 1]["start"] if index + 1 < len(captions) else timeline["end"]
     blocks.append(f"{index + 1}\n{timestamp(caption['start'])} --> {timestamp(end)}\n{caption['text']}\n")
 (output / "MeU-Actual-Worksheet-Demo.srt").write_text("\n".join(blocks), encoding="utf-8")
+
+def ass_timestamp(seconds):
+    centis = round(seconds * 100)
+    hours, centis = divmod(centis, 360000)
+    minutes, centis = divmod(centis, 6000)
+    whole, centis = divmod(centis, 100)
+    return f"{hours}:{minutes:02}:{whole:02}.{centis:02}"
+
+# Explicit resolution prevents SRT's default ASS scaling from covering the UI.
+ass = ["[Script Info]", "ScriptType: v4.00+", "PlayResX: 1280", "PlayResY: 1080",
+       "WrapStyle: 0", "", "[V4+ Styles]",
+       "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
+       "Style: Default,DejaVu Sans,28,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,2,32,32,40,1",
+       "", "[Events]", "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text"]
+for index, caption in enumerate(captions):
+    end = captions[index + 1]["start"] if index + 1 < len(captions) else timeline["end"]
+    text = caption["text"]
+    if any(character in text for character in "{}\\"):
+        raise SystemExit("Caption contains unsupported ASS control characters")
+    text = text.replace("\n", r"\N")
+    ass.append(f"Dialogue: 0,{ass_timestamp(caption['start'])},{ass_timestamp(end)},Default,,0,0,0,,{text}")
+(output / "MeU-Actual-Worksheet-Demo.ass").write_text("\n".join(ass) + "\n", encoding="utf-8")
 destination = output / "MeU-Actual-Worksheet-Demo.mp4"
 # Black space below the 1280x900 recording keeps captions off product controls.
 subprocess.run([
     "ffmpeg", "-hide_banner", "-loglevel", "warning", "-y", "-i", str(videos[0]),
-    "-vf", "pad=1280:1080:0:0:color=black,subtitles=MeU-Actual-Worksheet-Demo.srt:force_style='FontName=DejaVu Sans,FontSize=22,Alignment=2,MarginV=32,Outline=0'",
+    "-vf", "pad=1280:1080:0:0:color=black,ass=MeU-Actual-Worksheet-Demo.ass",
     "-c:v", "libx264", "-preset", "veryfast", "-crf", "22", "-pix_fmt", "yuv420p",
     "-movflags", "+faststart", "-an", str(destination),
 ], cwd=output, check=True)
