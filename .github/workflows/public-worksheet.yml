@@ -31,9 +31,14 @@ jobs:
           for path in [Path('/etc/apt/sources.list'), Path('/etc/apt/apt-mirrors.txt'), *Path('/etc/apt/sources.list.d').glob('*.sources'), *Path('/etc/apt/sources.list.d').glob('*.list')]:
               if path.exists():
                   data = path.read_text()
-                  # Include the hosted runner's mirror indirection file; preserve
-                  # configured hosts, suites, components and signature policy.
+                  # Preserve suites, components and signature policy.
                   path.write_text(data.replace('http://', 'https://'))
+          # The regional EC2 mirror served indexes but repeatedly stalled on
+          # package bytes before falling back. Use the working signed archive
+          # directly on this ephemeral Ubuntu x86_64 runner.
+          mirror_list = Path('/etc/apt/apt-mirrors.txt')
+          if mirror_list.exists():
+              mirror_list.write_text('https://archive.ubuntu.com/ubuntu\n')
           Path('/etc/apt/apt.conf.d/80bounded-downloads').write_text('Acquire::http::Timeout "30";\nAcquire::https::Timeout "30";\nAcquire::Retries "2";\nAcquire::Languages "none";\nAPT::Update::Error-Mode "any";\n')
           PY
       - name: Install browser system libraries and video encoder
